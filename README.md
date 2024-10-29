@@ -19,7 +19,18 @@ Se preferir, crie uma base de dados chamada `cadprocessos`
 ~~~mysql
 create database cadprocessos;
 ~~~
-Apos configurar a string de conexão em `appsettings.json` na raiz da aplicação, execute a migração conforme o comando abaixo:
+Após configurar a string de conexão em `appsettings.json` na raiz da aplicação, execute a migração conforme o comando abaixo:
 ~~~pm
 update-database
+~~~
+
+## Execução
+
+Finalizado os comandos citados na sessão 'Construção', execute a aplicação conforme os comandos abaixo:
+
+Certifique-se que você está na raíz da aplicação `...\CadastroDeProcessos\CadProcessosApp>`
+
+Execute
+~~~
+dotnet run
 ~~~
