@@ -1,0 +1,24 @@
+@model CadProcessosApp.Models.Processo
+
+@{
+    ViewData["Title"] = "Adicionar Novo Processo";
+    ViewData["Action"] = "Inserir";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h3>Adicionar Novo Processo</h3>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <a class="btn btn-sm btn-outline-secondary" asp-action="Index">
+                <i class="bi bi-x"></i> Cancelar
+            </a>
+        </div>
+    </div>
+</div>
+
+<partial name="~/Views/Shared/_Formulario.cshtml" model="Model" />
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="/js/municipios.js"></script>
+}

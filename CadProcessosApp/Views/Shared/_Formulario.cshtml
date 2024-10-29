@@ -1,0 +1,60 @@
+@model CadProcessosApp.Models.Processo
+
+<form asp-action="@ViewData["Action"]">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="">Nome do Processo</label>
+            <input asp-for="NomeProcesso" class="form-control" />
+            <span asp-validation-for="NomeProcesso" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="NPU">NPU</label>
+            <input asp-for="NPU" class="form-control" />
+            <span asp-validation-for="NPU" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="uf">Estado</label>
+            <select id="uf" class="form-control" asp-for="UF">
+                <option value="">Selecione um estado</option>
+                <option value="AC">AC</option>
+                <option value="AL">AL</option>
+                <option value="AP">AP</option>
+                <option value="AM">AM</option>
+                <option value="BA">BA</option>
+                <option value="CE">CE</option>
+                <option value="DF">DF</option>
+                <option value="ES">ES</option>
+                <option value="GO">GO</option>
+                <option value="MA">MA</option>
+                <option value="MT">MT</option>
+                <option value="MS">MS</option>
+                <option value="MG">MG</option>
+                <option value="PA">PA</option>
+                <option value="PB">PB</option>
+                <option value="PR">PR</option>
+                <option value="PE">PE</option>
+                <option value="PI">PI</option>
+                <option value="RJ">RJ</option>
+                <option value="RN">RN</option>
+                <option value="RS">RS</option>
+                <option value="RO">RO</option>
+                <option value="RR">RR</option>
+                <option value="SC">SC</option>
+                <option value="SP">SP</option>
+                <option value="SE">SE</option>
+                <option value="TO">TO</option>
+            </select>
+        </div>
+        <div class="col-md-8 mb-3">
+            <label for="municipio">Município</label>
+            <select id="municipio" class="form-control" asp-for="Municipio">
+                <option value="">Selecione um município</option>
+            </select>
+        </div>
+    </div>
+    <hr class="mb-4">
+    <button class="btn btn-primary btn-block" type="submit"><i class="bi bi-floppy"></i> Salvar dados do processo</button>
+</form>

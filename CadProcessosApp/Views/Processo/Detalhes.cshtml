@@ -1,0 +1,33 @@
+@model CadProcessosApp.Models.Processo
+
+@{
+    ViewData["Title"] = "Detalhes do Processo - ";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h3>Detalhes do Processo</h3>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <a class="btn btn-sm btn-outline-primary" asp-action="Editar" asp-route-id="@Model?.Id">
+                <i class="bi bi-pencil"></i> Editar
+            </a>
+            <a class="btn btn-sm btn-outline-secondary" asp-action="Index" asp-route-paginaAtual="@ViewBag.PaginaAtual">
+                <i class="bi bi-arrow-left-short"></i> Voltar
+            </a>
+        </div>
+    </div>
+</div>
+
+@* @Html.DisplayNameFor(model => model.NomeProcesso)
+@Html.DisplayFor(model => model.NomeProcesso)  *@
+
+<div class="row align-items-center py-1">
+    <h3>@Html.DisplayFor(model => model.NomeProcesso)</h3>
+    <p class="lead">@Html.DisplayFor(model => model.NPU)</p>
+    <p>
+        De @Html.DisplayFor(model => model.Municipio) - @Html.DisplayFor(model => model.UF) <br>
+        Cadastrado em <mark>@Html.DisplayFor(model => model.DataCadastro)</mark>
+    </p>
+    
+    <p><small>Visualizado em @Html.DisplayFor(model => model.DataVisualizacao)</small></p>
+</div>

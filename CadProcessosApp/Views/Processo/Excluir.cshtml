@@ -1,0 +1,23 @@
+@model CadProcessosApp.Models.Processo
+
+@{
+    ViewData["Title"] = "Excluir Processo - ";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h3>Deseja excluir o processo @Model.NPU?</h3>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <form asp-action="Excluir">
+            <div class="btn-group mr-2">
+                <button class="btn btn-sm btn-primary" type="submit" asp-action="Excluir" asp-route-id="@Model?.Id">
+                    <i class="bi bi-check"></i> Sim
+                </button>
+                <button class="btn btn-sm btn-secondary" asp-action="Editar" asp-route-id="@Model?.Id">
+                    <i class="bi bi-x"></i> Não
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    
