@@ -11,6 +11,7 @@ O código é exemplo de um CRUD em Asp.Net MVC com Razor Pages e exemplifica o p
 * EntityFrameworkCore.Tools
 * Pomelo.EntityFrameworkCore.MySql
 * Pomelo.EntityFrameworkCore.MySql.Design
+* X.PagedList
 
 ### Banco de dados e migrations
 
@@ -25,6 +26,7 @@ update-database
 
 ### Git e/ou Versionamento
 `master` Branch de versão finalizada e publicada.
+
 `develop` Branch para desenvolvimento. A partir dela deverá ser criada novas branchs para _feature, patch, bugfix, etc_ como por exemplo `feat-organizacao-tabela`.
 
 _Aqui não há necessidade de uma branch para homologação ou outras situações por se tratar de uma aplicação de laboratório_.
@@ -37,6 +39,9 @@ Finalizado os comandos citados na sessão 'Construção', certifique-se que voc�
 ~~~
 
 ## Atualizações
+
+__Vs 1.2.0__
+* Adicionado paginação da tabela principal de Processos
 
 __Vs 1.1.0__
 - Foi adicionado o padrão de projeto Unit of Work para garantir uniformidade e escalabilidade.
