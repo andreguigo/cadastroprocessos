@@ -30,6 +30,9 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.MapControllerRoute(name: "Paginacao",
+    pattern: "{controller=Processo}/{pagina:int}",
+    defaults: new { action = "Index" });
 app.MapControllerRoute(name: "Default",
     pattern: "{controller=Processo}/{action=Index}/{id?}");
 
