@@ -17,7 +17,7 @@ namespace CadProcessosApp.Models
         
         [Column("NPU")]
         public string? NPURaw { get; set; }
-        public DateTime DataCadastro { get; set; }
+        public DateTime DataCadastro { get; set; } = DateTime.Now;
         public DateTime DataVisualizacao { get; set; }
         public string? UF { get; set; }
         public string? Municipio { get; set; }

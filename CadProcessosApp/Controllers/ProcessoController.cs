@@ -1,5 +1,6 @@
 using CadProcessosApp.Data;
 using CadProcessosApp.Models;
+using CadProcessosApp.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,138 +8,122 @@ namespace CadProcessosApp.Controllers
 {
     public class ProcessoController : Controller
     {
-        private readonly ProcessoDbContext _contexto;
-        private const int TamanhoPagina = 5;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ProcessoController(ProcessoDbContext contexto)
+        public ProcessoController(IUnitOfWork unitOfWork)
         {
-            _contexto = contexto;
+            _unitOfWork = unitOfWork;
         }
 
-        // GET: Processo
-        public async Task<IActionResult> Index(int? paginaAtual)
+        public async Task<IActionResult> Index()
         {
-            int tamanhoPagina = TamanhoPagina;
-            var processos = _contexto.Processos.AsQueryable();
-
+            var processos = await _unitOfWork.ProcessoRepository.Index();
             foreach (var processo in processos)
                 processo.ConverterRawParaNPU();
-
-            TempData["PaginaAtual"] = paginaAtual;
-
-            return View(await Paginacao<Processo>.CreateAsync(processos, paginaAtual ?? 1, tamanhoPagina));
+            
+            return View(processos);
         }
 
-        // GET: Processo/Detalhes/{Guid}
-        public async Task<IActionResult> Detalhes(Guid? id, int paginaAtual = 1)
+        public async Task<IActionResult> Detalhes(Guid id)
         {
-            var processo = await _contexto.Processos.FindAsync(id);
+            var processo = await _unitOfWork.ProcessoRepository.Detalhes(id);
             if (processo == null) return NotFound();
 
             processo.DataVisualizacao = DateTime.Now;
-            _contexto.Update(processo);
-            await _contexto.SaveChangesAsync();
+            _unitOfWork.ProcessoRepository.SalvarEdicao(processo);
+            await _unitOfWork.CompleteAsync();
 
             processo.ConverterRawParaNPU();
-
-            ViewBag.PaginaAtual = TempData["PaginaAtual"];
-
             return View(processo);
         }
 
-        // GET: Processo/Inserir
         public IActionResult Inserir()
         {
             return View();
         }
 
-        // POST: Processo/Inserir
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Inserir(Processo processo)
         {
             if (ModelState.IsValid)
             {
-                processo.Id = Guid.NewGuid();
                 processo.DataCadastro = DateTime.Now;
                 processo.ConverterNPUParaRaw();
 
-                _contexto.Add(processo);
-                await _contexto.SaveChangesAsync();
-
+                await _unitOfWork.ProcessoRepository.Inserir(processo);
+                await _unitOfWork.CompleteAsync();
                 return RedirectToAction(nameof(Index));
             }
-
             return View(processo);
         }
 
-        // GET: Processo/Editar/{Guid}
-        public async Task<IActionResult> Editar(Guid? id)
+        public async Task<IActionResult> Editar(Guid id)
         {
-            if (id == null)
-                return NotFound();
+            var processo = await _unitOfWork.ProcessoRepository.Detalhes(id);
+            if (processo == null) return NotFound();
 
-            var processo = await _contexto.Processos.FindAsync(id);
-            if (processo == null)
-                return NotFound();
-            
             processo.ConverterRawParaNPU();
-
             return View(processo);
         }
 
-        // POST: Processo/Editar/{Guid}
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Editar(Guid id, Processo processo)
-        { 
-            if (id!= processo.Id)
-                return NotFound();
+        {
+            if (id != processo.Id)
+                return BadRequest();
 
             if (ModelState.IsValid)
             {
-                processo.DataCadastro = DateTime.Now;
-                processo.ConverterNPUParaRaw();
-            
-                _contexto.Update(processo);
-                await _contexto.SaveChangesAsync();
-            
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    processo.ConverterNPUParaRaw();
+                    
+                    _unitOfWork.ProcessoRepository.SalvarEdicao(processo);
+                    await _unitOfWork.CompleteAsync();
+    
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError(string.Empty, "Não foi possível atualizar o Processo. Tente novamente.");
+                }
+
             }
-
             return View(processo);
         }
 
-        // GET: Processo/Excluir/{id}
-        public async Task<IActionResult> Excluir(Guid? id)
-        {
-            if (id == null)
-                return NotFound();
+        // // GET: Processo/Excluir/{id}
+        // public async Task<IActionResult> Excluir(Guid? id)
+        // {
+        //     if (id == null)
+        //         return NotFound();
 
-            var processo = await _contexto.Processos
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (processo == null)
-                return NotFound();
+        //     var processo = await _contexto.Processos
+        //         .FirstOrDefaultAsync(m => m.Id == id);
+        //     if (processo == null)
+        //         return NotFound();
 
-            return View(processo);
-        }
+        //     return View(processo);
+        // }
 
-        // POST: Processo/Excluir/{id}
-        [HttpPost, ActionName("Excluir")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmarExcluir(Guid id)
-        {
-            var processo = await _contexto.Processos.FindAsync(id);
+        // // POST: Processo/Excluir/{id}
+        // [HttpPost, ActionName("Excluir")]
+        // [ValidateAntiForgeryToken]
+        // public async Task<IActionResult> ConfirmarExcluir(Guid id)
+        // {
+        //     var processo = await _contexto.Processos.FindAsync(id);
             
-            _contexto.Processos.Remove(processo!);
-            await _contexto.SaveChangesAsync();
+        //     _contexto.Processos.Remove(processo!);
+        //     await _contexto.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
-        }
+        //     return RedirectToAction(nameof(Index));
+        // }
 
-        private bool ExisteProcesso(Guid id)
-        {
-            return _contexto.Processos.Any(e => e.Id == id);
-        }
+        // private bool ExisteProcesso(Guid id)
+        // {
+        //     return _contexto.Processos.Any(e => e.Id == id);
+        // }
     }
 }
