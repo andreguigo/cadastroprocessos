@@ -1,4 +1,5 @@
 using CadProcessosApp.Data;
+using CadProcessosApp.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,8 @@ var connection = builder.Configuration.GetConnectionString("ProcessoConnDb");
 
 builder.Services.AddDbContextFactory<ProcessoDbContext>(options =>
     options.UseMySql(connection, ServerVersion.AutoDetect(connection)));
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -27,9 +30,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(name: "paginacao",
-    pattern: "{controller=Processo}/p/{paginaAtual:int}",
-    defaults: new { action = "Index" });
 app.MapControllerRoute(name: "Default",
     pattern: "{controller=Processo}/{action=Index}/{id?}");
 
