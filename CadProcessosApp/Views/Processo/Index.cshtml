@@ -1,4 +1,5 @@
-@model IEnumerable<CadProcessosApp.Models.Processo>
+@model X.PagedList.IPagedList<CadProcessosApp.Models.Processo>
+    @using X.PagedList.Mvc.Core;
 
 @{
     ViewData["Title"] = "Lista de Processos - ";
@@ -38,3 +39,10 @@
         </tbody>
     </table>
 </div>
+
+@Html.PagedListPager(Model, pagina => Url.Action("Index", 
+    new { pagina }),
+    new PagedListRenderOptions {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" }
+})

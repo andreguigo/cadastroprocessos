@@ -3,6 +3,7 @@ using CadProcessosApp.Models;
 using CadProcessosApp.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList.Extensions;
 
 namespace CadProcessosApp.Controllers
 {
@@ -15,16 +16,21 @@ namespace CadProcessosApp.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pagina)
         {
             var processos = await _unitOfWork.ProcessoRepository.Index();
             foreach (var processo in processos)
                 processo.ConverterRawParaNPU();
             
-            return View(processos);
+            int tamanhoPagina = 3;
+            int numeroPagina = pagina ?? 1;
+
+            TempData["Pagina"] = pagina;
+                        
+            return View(processos.ToPagedList(numeroPagina, tamanhoPagina));
         }
 
-        public async Task<IActionResult> Detalhes(Guid id)
+        public async Task<IActionResult> Detalhes(Guid id, int pagina = 1)
         {
             var processo = await _unitOfWork.ProcessoRepository.Detalhes(id);
             if (processo == null) return NotFound();
@@ -34,6 +40,8 @@ namespace CadProcessosApp.Controllers
             await _unitOfWork.CompleteAsync();
 
             processo.ConverterRawParaNPU();
+
+            ViewBag.Pagina = TempData["Pagina"];
             return View(processo);
         }
 
