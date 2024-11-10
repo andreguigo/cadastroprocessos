@@ -1,7 +1,6 @@
 using CadProcessosApp.Models;
 using CadProcessosApp.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using X.PagedList.Extensions;
 
 namespace CadProcessosApp.Controllers
@@ -109,8 +108,11 @@ namespace CadProcessosApp.Controllers
 
         [HttpPost, ActionName("Excluir")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmarExclusao(Guid id, Processo processo)
+        public async Task<IActionResult> ConfirmarExclusao(Guid id)
         {
+            var processo = await _unitOfWork.ProcessoRepository.Excluir(id);
+            if (id != processo.Id) return BadRequest();
+
             if (ModelState.IsValid)
             {
                 try
