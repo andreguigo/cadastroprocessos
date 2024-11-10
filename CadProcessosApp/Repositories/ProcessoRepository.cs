@@ -37,5 +37,15 @@ namespace CadProcessosApp.Repositories
         {
             _contexto.Processos.Update(processo);
         }
+
+        public async Task<Processo> Excluir(Guid id)
+        {
+            return await _contexto.Processos.FirstOrDefaultAsync(p => p.Id == id);
+        }
+        
+        public void ConfirmarExclusao(Processo processo)
+        {
+            _contexto.Processos.Remove(processo);
+        }
     }
 }
