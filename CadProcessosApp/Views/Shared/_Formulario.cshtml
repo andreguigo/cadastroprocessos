@@ -51,7 +51,10 @@
         <div class="col-md-8 mb-3">
             <label for="municipio">Município</label>
             <select id="municipio" class="form-control" asp-for="Municipio">
-                <option value="@Model.Municipio">@Model.Municipio</option>
+                @if (@ViewData["Action"] == "Editar")
+                {
+                    <option value="@Model.Municipio">@Model.Municipio</option>
+                }
             </select>
         </div>
     </div>
