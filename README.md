@@ -40,6 +40,9 @@ Finalizado os comandos citados na sessão 'Construção', certifique-se que voc�
 
 ## Atualizações
 
+__Vs 1.2.3__
+* Ajustado o reconhecimento da ação no formulário parcial
+
 __Vs 1.2.2__
 * Ajustado a função Excluir Processo
 * Resolvido o bug do select no formulário de Editar
