@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using CadProcessosApp.Models;
 
 namespace CadProcessosApp.Repositories
@@ -10,5 +9,7 @@ namespace CadProcessosApp.Repositories
         Task Inserir(Processo processo);
         Task<Processo> Editar(Guid id);
         void SalvarEdicao(Processo processo);
+        Task<Processo> Excluir(Guid id);
+        void ConfirmarExclusao(Processo processo);
     }
 }
