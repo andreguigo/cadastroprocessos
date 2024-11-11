@@ -1,8 +1,6 @@
-using CadProcessosApp.Data;
 using CadProcessosApp.Models;
 using CadProcessosApp.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using X.PagedList.Extensions;
 
 namespace CadProcessosApp.Controllers
@@ -79,8 +77,7 @@ namespace CadProcessosApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Editar(Guid id, Processo processo)
         {
-            if (id != processo.Id)
-                return BadRequest();
+            if (id != processo.Id) return BadRequest();
 
             if (ModelState.IsValid)
             {
@@ -102,36 +99,36 @@ namespace CadProcessosApp.Controllers
             return View(processo);
         }
 
-        // // GET: Processo/Excluir/{id}
-        // public async Task<IActionResult> Excluir(Guid? id)
-        // {
-        //     if (id == null)
-        //         return NotFound();
+        public async Task<IActionResult> Excluir(Guid id)
+        {
+            var processo = await _unitOfWork.ProcessoRepository.Excluir(id);
+            if (processo == null) return NotFound();
+            return View(processo);
+        }
 
-        //     var processo = await _contexto.Processos
-        //         .FirstOrDefaultAsync(m => m.Id == id);
-        //     if (processo == null)
-        //         return NotFound();
+        [HttpPost, ActionName("Excluir")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmarExclusao(Guid id)
+        {
+            var processo = await _unitOfWork.ProcessoRepository.Excluir(id);
+            if (id != processo.Id) return BadRequest();
 
-        //     return View(processo);
-        // }
+            if (ModelState.IsValid)
+            {
+                try
+                {                    
+                    _unitOfWork.ProcessoRepository.ConfirmarExclusao(processo);
+                    await _unitOfWork.CompleteAsync();
+    
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError(string.Empty, "Não foi possível excluir o Processo. Tente novamente.");
+                }
 
-        // // POST: Processo/Excluir/{id}
-        // [HttpPost, ActionName("Excluir")]
-        // [ValidateAntiForgeryToken]
-        // public async Task<IActionResult> ConfirmarExcluir(Guid id)
-        // {
-        //     var processo = await _contexto.Processos.FindAsync(id);
-            
-        //     _contexto.Processos.Remove(processo!);
-        //     await _contexto.SaveChangesAsync();
-
-        //     return RedirectToAction(nameof(Index));
-        // }
-
-        // private bool ExisteProcesso(Guid id)
-        // {
-        //     return _contexto.Processos.Any(e => e.Id == id);
-        // }
+            }
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
